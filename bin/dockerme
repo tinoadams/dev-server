@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+SSH_AGENT=""
+if [ ! -z "$SSH_AUTH_SOCK" ]; then
+  SOCKET=$(readlink -f $SSH_AUTH_SOCK)
+  SSH_AGENT="-v ${SOCKET}:${SOCKET} -e SSH_AUTH_SOCK=${SOCKET}"
+fi
+
+RUN_AS="-v /etc/passwd:/etc/passwd -v /etc/group:/etc/group -v ${HOME}:${HOME} -u `id -u`"
+
+ENV_FILE=$(mktemp /tmp/docker-env.XXXXXX)
+env | grep -v '^HOSTNAME' | grep -v '^HOME' > ${ENV_FILE}
+
+sudo docker run -i -t --rm --privileged \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --env-file=${ENV_FILE} \
+  ${RUN_AS} \
+  ${SSH_AGENT} \
+  -v "${PWD}:${PWD}" -w "${PWD}" \
+  "$@"
