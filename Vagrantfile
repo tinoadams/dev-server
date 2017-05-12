@@ -47,37 +47,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ln -sf /vagrant/configs/smb.conf /etc/samba/smb.conf
     sudo systemctl restart smbd
 
-    # install nodejs
-    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-
-    # install watchman
-    git clone https://github.com/facebook/watchman.git
-    pushd watchman/
-    git checkout v4.7.0
-    sudo apt-get install -y autoconf automake build-essential python-dev
-    ./autogen.sh
-    ./configure
-    make
-    sudo make install
-    popd
-
-    # install nuclide server
-    sudo npm install -g nuclide
-
-    # install hhvm
-    sudo apt-get install software-properties-common
-    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
-    sudo add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
-    sudo apt-get update
-    sudo apt-get install -y hhvm
-    # configure hhvm
-    ln -sf /vagrant/configs/hhvm.php.ini /etc/hhvm/php.ini
-    ln -sf /vagrant/configs/hhvm.server.ini /etc/hhvm/server.ini
-    # start hhvm on bootup and restart now
-    sudo systemctl enable hhvm
-    sudo systemctl restart hhvm
-
     #####
     #curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
     # pushd /usr/local/bin
