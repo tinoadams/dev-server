@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+function error() {
+  echo "$1"
+  exit 1
+}
+
+[ -n "$1" ] || error "Usage: $0 WEB_ROOT"
+WEBROOT=`readlink -f $1`
+[ -d "$WEBROOT" ] || error "Web root not found: $WEBROOT"
+
+docker rm -f hhvm-nuclide || echo "skip..."
+
+docker run -d --name hhvm-nuclide \
+		-v ${WEBROOT}:/web-root \
+		-p 2222:22 -p 8000:80 -p 9000:9000 -p 9090:9090 \
+		hhvm-nuclide
