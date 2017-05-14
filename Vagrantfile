@@ -62,6 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # ensure we source all login-scripts in the user bashrc
     su -l vagrant <<'EOF'
       echo 'for f in /vagrant/login-scripts/*.sh; do echo "Login script: $f" && source $f; done' >> ~/.bashrc
+      echo 'export LS_COLORS="rs=0:di=01;36:ln=01;36:mh=00:pi=40;33"' >> ~/.bashrc
 EOF
 SHELL
 
