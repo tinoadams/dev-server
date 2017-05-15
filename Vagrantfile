@@ -58,10 +58,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # add our shared bin dir to the path
     echo 'export PATH="/vagrant/bin:$PATH"' >> /etc/profile
+    # execute scripts on login
+    echo 'for f in /vagrant/login-scripts/*.sh; do echo "Login script: $f" && source $f; done' >> /etc/profile
 
     # ensure we source all login-scripts in the user bashrc
     su -l vagrant <<'EOF'
-      echo 'for f in /vagrant/login-scripts/*.sh; do echo "Login script: $f" && source $f; done' >> ~/.bashrc
       echo 'export LS_COLORS="rs=0:di=01;36:ln=01;36:mh=00:pi=40;33"' >> ~/.bashrc
 EOF
 SHELL
